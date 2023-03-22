@@ -1,0 +1,10 @@
+django
+psycopg2
+sentry-sdk
+djangorestframework
+djangorestframework-simplejwt 
+django-cors-headers
+pytest-django
+Faker
+six
+uwsgi
