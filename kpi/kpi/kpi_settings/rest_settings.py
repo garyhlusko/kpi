@@ -1,4 +1,4 @@
-from kpi.settings import SECRET_KEY
+from kpi.signals import SECRET_KEY
 import datetime
 
 REST_FRAMEWORK = {

@@ -7,7 +7,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.serializers import ModelSerializer
 
-from kpi.models import DogBreed, Department, DogPhoto, PhotoClick, InfoRequest, User
+from kpi.models import DogBreed, Department, DogPhoto, PhotoClick, InfoRequest, User, Dog, Bill, BillType, Donation
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -38,6 +38,27 @@ class InfoRequestSerializer(serializers.ModelSerializer):
         model = InfoRequest
         exclude = []
 
+
+class DogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Dog 
+        exclude = []
+
+class BillTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= BillType  
+        exclude = []
+
+class BillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Bill 
+        exclude = []
+
+
+class DonationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Donation
+        exclude = []
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

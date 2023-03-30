@@ -7,4 +7,4 @@ django-cors-headers
 pytest-django
 Faker
 six
-uwsgi
+gunicorn
