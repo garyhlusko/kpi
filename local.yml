@@ -1,1 +1,49 @@
-version 3
+version: '3'
+
+services:
+  pg:
+    env_file:
+      - .env
+    image: postgres:latest
+    environment:
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=5432
+    ports: 
+      - "${DB_PORT}:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+  kpi_web:
+    env_file:
+    - .env
+    build: 
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+    command: tail -f /code/text.txt  ##python /code/kpi/manage.py runserver #gunicorn --bind 0.0.0.0:8000 --timeout 600 kpi.wsgi
+    volumes:
+      - ./server:/code
+    ports:
+      - "${WEB_PORT}:8000"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_NAME}
+      - DB_PORT=5432
+      - SECRET_KEY=${SECRET_KEY}
+  server:
+    image: nginx
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./nginx/local/default.conf:/etc/nginx/conf.d/default.conf
+    restart: "no"
+
+volumes:
+  postgresql-data:
+
+networks:
+  default:
+    name: staging
