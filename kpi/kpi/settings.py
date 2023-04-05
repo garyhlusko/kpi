@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv("SECREY_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG","FALSE") == "TRUE"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "kpi.api",
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework_authtoken'
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

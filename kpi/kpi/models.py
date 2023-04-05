@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 class DogBreed(models.Model):
     breed = models.CharField(max_length=20)
@@ -10,7 +11,7 @@ class DogBreed(models.Model):
 
 class Dog(models.Model):
     dog_id = models.CharField(max_length=50)
-    dog_breed = models.ForeignKey(DogBreed,on_del=models.PROTECT)
+    dog_breed = models.ForeignKey(DogBreed,on_delete=models.PROTECT)
     dog_name = models.CharField(max_length=25)
     dog_weight_lbs = models.DecimalField(max_digits=7,decimal_places=2,null=True) 
     dog_shelter_date_enter = models.DateTimeField(timezone.now)
@@ -23,7 +24,7 @@ class Dog(models.Model):
 class DogPhoto(models.Model):
     dog_photo_id = models.CharField(max_length=200)
     dog = models.ForeignKey(Dog,on_delete=models.PROTECT)
-    photo = models.CharField(Max_length=200)
+    photo = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_created=True)
     updated_at = models.DateField(auto_now=True) 
 
@@ -37,7 +38,7 @@ class PhotoClick(models.Model):
 
   
 class InfoRequest(models.Model):
-    dog = models.ForeignKey(Dog)
+    dog = models.ForeignKey(Dog,on_delete=models.PROTECT)
     request_time = models.DateTimeField(timezone.now)
     dog_adopted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_created=True)
@@ -51,14 +52,14 @@ class BillType(models.Model):
 class Bill(models.Model):
     dog = models.ForeignKey(Dog,on_delete=models.PROTECT,null=True)
     bill_amount = models.DecimalField(max_digits=8,decimal_places=2)
-    bill_type = models.ForeignKey(BillType,models.Model,on_delete=models.PROTECT)
+    bill_type = models.ForeignKey(BillType,on_delete=models.PROTECT)
     bill_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_created=True)
     updated_at = models.DateField(auto_now=True) 
 
 class Donation(models.Model):
     dog = models.ForeignKey(Dog,on_delete=models.PROTECT,null=True)
-    amount = models.DecimalField(max_length=13,decimal=2)
+    amount = models.DecimalField(max_digits=13,decimal_places=2)
     donation_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_created=True)
     updated_at = models.DateField(auto_now=True) 

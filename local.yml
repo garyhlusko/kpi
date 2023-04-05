@@ -21,9 +21,9 @@ services:
     build: 
       context: .
       dockerfile: ./docker/local/Dockerfile
-    command: tail -f /code/text.txt  ##python /code/kpi/manage.py runserver #gunicorn --bind 0.0.0.0:8000 --timeout 600 kpi.wsgi
+    command: python /code/kpi/manage.py runserver #gunicorn --bind 0.0.0.0:8000 --timeout 600 kpi.wsgi
     volumes:
-      - ./server:/code
+      - ./kpi:/code/kpi
     ports:
       - "${WEB_PORT}:8000"
     environment:
