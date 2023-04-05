@@ -20,7 +20,7 @@ from kpi.api.serializers import *
 import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class DogBreedList(APIView):

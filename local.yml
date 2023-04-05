@@ -21,7 +21,7 @@ services:
     build: 
       context: .
       dockerfile: ./docker/local/Dockerfile
-    command: python /code/kpi/manage.py runserver #gunicorn --bind 0.0.0.0:8000 --timeout 600 kpi.wsgi
+    command: gunicorn --bind 0.0.0.0:8000 --timeout 600 kpi.wsgi
     volumes:
       - ./kpi:/code/kpi
     ports:
