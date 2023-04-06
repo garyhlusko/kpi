@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from kpi.api.views import UserAPIView, PING, DogBreedDetail,DogBreedList, DogPhotoList, DogPhotoDetail, PhotoClickDetail, PhotoClickList
+from kpi.api.views import UserAPIView, PING, DogBreedDetail,DogBreedList, DogPhotoList, DogPhotoDetail, PhotoClickDetail, PhotoClickList, LoginViewSet
 
 urlpatterns = [
     path('ping/', PING.as_view(), name="ping"),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('dog/photos/<int:id>',DogPhotoDetail.as_view(),name="dog_breed"),
     path('photo/clicks',PhotoClickList.as_view(),name="dog_breeds"),
     path('photo/clicks/<int:id>',PhotoClickDetail.as_view(),name="dog_breed"),
+    path("login/",LoginViewSet.as_view({"post":"create"}),name="login"),
 ]

@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG","FALSE") == "TRUE"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
-
+print(ALLOWED_HOSTS)
 
 # Application definition
 
@@ -128,7 +128,4 @@ AUTH_USER_MODEL = 'kpi.User'
 
 from kpi.kpi_settings.rest_settings import *
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost',
-)
 

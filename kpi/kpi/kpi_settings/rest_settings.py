@@ -1,5 +1,17 @@
+import django
+django.setup()
 from kpi.settings import SECRET_KEY
 import datetime
+from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import exceptions as rest_exceptions
+from rest_framework import authentication
+from rest_framework import permissions
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.authtoken.models import Token
+
+from  django.core import exceptions
+from kpi.models import User
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

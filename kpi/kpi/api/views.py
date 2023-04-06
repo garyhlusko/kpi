@@ -23,8 +23,10 @@ logger = logging.getLogger(__name__)
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+
 class DogBreedList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
 
     def get_object():
         return DogBreed.objects.all()
@@ -36,21 +38,22 @@ class DogBreedList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
-        dog_breed = cleaned_data.get("dog_breed",None)
+        cleaned_data = request.data
+        dog_breed = cleaned_data.get("breed",None)
         if dog_breed is not None:
             dog_breed = dog_breed.lower()
-            dog_breed,created = DogBreed.objects.get_or_create(dog_breed=dog_breed)
-            serializer = UserSerializer(serializer.data)
+            dog_breed,created = DogBreed.objects.get_or_create(breed=dog_breed,created_at=timezone.now())
+            serializer = DogBreedSerializer(dog_breed)
             return Response(serializer.data)
-
+        else:
+            return Response("dog breed is none")
 
     class Meta:
         fields = "__all__"
 
 
 class DogBreedDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
 
     def get_object(self, pk):
         try:
@@ -65,7 +68,7 @@ class DogBreedDetail(APIView):
 
     def put(self, request, pk):
         dog_breed = self.get_object(pk)
-        breed = request.data.get("dog_breed",None)
+        breed = request.data.get("breed",None)
         if dog_breed is not None and dog_breed.breed != breed:
             dog_breed.breed = breed
             dog_breed.save()
@@ -76,8 +79,8 @@ class DogBreedDetail(APIView):
         pass
 
 class DogList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return Dog.objects.all()
 
@@ -88,7 +91,7 @@ class DogList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         dog_id = cleaned_data.get("dog_id",None)
         dog_breed = cleaned_data.get("dog_breed",None)
         dog_name = cleaned_data.get("dog_name",None)
@@ -103,7 +106,7 @@ class DogList(APIView):
                                  dog_shelter_date_enter=dog_shelter_date_enter,dog_adoption_date=dog_adoption_date,
                                  dog_bio=dog_bio)
         dog.save()
-        serializer = DogSerializer(serializer.data)
+        serializer = DogSerializer(dog)
         return Response(serializer.data)
 
 
@@ -112,8 +115,8 @@ class DogList(APIView):
 
 
 class DogDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self, pk=None,dog_id=None):
         if pk is not None:
             try:
@@ -156,7 +159,7 @@ class DogDetail(APIView):
         dog.dog_adoption_date = dog_adoption_date
         dog.dog_bio=dog_bio
         dog.save()
-        serializer = DogSerializer(serializer.data)
+        serializer = DogSerializer(dog)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
@@ -165,8 +168,8 @@ class DogDetail(APIView):
 
 
 class DogPhotoList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return DogPhoto.objects.all()
 
@@ -177,7 +180,7 @@ class DogPhotoList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         dog_id = cleaned_data.get("dog_id",None)
         if dog_id is not None:
             dog = Dog.objects.get(dog_id=dog_id)
@@ -192,8 +195,8 @@ class DogPhotoList(APIView):
         fields = "__all__"
 
 class DogPhotoDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self,pk=None):
         return DogPhoto.objects.get(pk=pk)
 
@@ -225,8 +228,8 @@ class DogPhotoDetail(APIView):
 
 
 class PhotoClickList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return PhotoClickList.objects.all()
 
@@ -237,7 +240,7 @@ class PhotoClickList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         dog_photo_id = cleaned_data.get("dog_photo_id",None)
         click_date = cleaned_data.get("click_date",timezone.now)
         user_info = cleaned_data.get("user_info",None)
@@ -254,8 +257,8 @@ class PhotoClickList(APIView):
 
 
 class PhotoClickDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self, pk):
         try:
             return PhotoClick.objects.get(pk=pk)
@@ -279,8 +282,8 @@ class PhotoClickDetail(APIView):
 
 
 class InfoRequestList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return InfoRequest.objects.all()
 
@@ -291,7 +294,7 @@ class InfoRequestList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         dog_id = cleaned_data.get("dog_id",None)
         request_time = cleaned_data.get("request_time",timezone.now)
         dog_adopted = cleaned_data.get("dog_adopted",False)
@@ -309,8 +312,8 @@ class InfoRequestList(APIView):
 
 
 class InfoRequestkDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self, pk):
         try:
             return InfoRequest.objects.get(pk=pk)
@@ -346,8 +349,8 @@ class InfoRequestkDetail(APIView):
     
 
 class BillTypeList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return BillType.objects.all()
 
@@ -358,7 +361,7 @@ class BillTypeList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         bill_type = cleaned_data.get("bill_type",None)
         if bill_type is not None:
             bill_type = bill_type.lower()
@@ -372,8 +375,8 @@ class BillTypeList(APIView):
 
 
 class BillDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self, pk):
         try:
             return Bill.objects.get(pk=pk)
@@ -414,8 +417,8 @@ class BillDetail(APIView):
     
 
 class BillList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return Bill.objects.all()
 
@@ -447,8 +450,8 @@ class BillList(APIView):
 
 
 class DonationList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object():
         return Donation.objects.all()
 
@@ -459,7 +462,7 @@ class DonationList(APIView):
         
     @action(detail=False,methods=["post"])
     def post(self,request):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         dog_id = cleaned_data.get("dog_id",None)
         amount = cleaned_data.get("amount",None)
         donation_date = cleaned_data.get("donation_date",timezone.now())
@@ -478,8 +481,8 @@ class DonationList(APIView):
 
 
 class DonationDetail(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self, pk):
         try:
             return Donation.objects.get(pk=pk)
@@ -492,7 +495,7 @@ class DonationDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        cleaned_data = request.cleaned_data
+        cleaned_data = request.data
         donation = self.get_object(pk)
         dog_id = cleaned_data.get("dog_id",None)
         amount = cleaned_data.get("amount",donation.amount)
@@ -551,7 +554,8 @@ class RefreshViewSet(ViewSet, TokenRefreshView):
 
 
 class UserAPIView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
+    authentication_classes = [authentication.TokenAuthentication,authentication.BasicAuthentication,authentication.SessionAuthentication]
+    
     def get_object(self,pk):
         user = User.objects.get(pk = pk)
         if self.pk == user.pk:
